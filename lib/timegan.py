@@ -85,7 +85,6 @@ class BaseModel():
     torch.save({'epoch': epoch + 1, 'state_dict': self.nets.state_dict()},
                '%s/netS.pth' % (weight_dir))
 
-
   def train_one_iter_er(self):
     """ Train the model for one epoch.
     """
@@ -147,7 +146,6 @@ class BaseModel():
 
     # train superviser
     self.optimize_params_d()
-
 
   def train(self):
     """ Train the model
