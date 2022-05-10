@@ -77,11 +77,11 @@ def sine_data_generation (no, seq_len, dim):
     temp = (temp + 1)*0.5
     # Stack the generated data
     data.append(temp)
-                
+
   return data
     
 
-def real_data_loading (data_name, seq_len, acc_id=None):
+def real_data_loading(data_name, seq_len, acc_id):
   """Load and preprocess real-world datasets.
   
   Args:
@@ -91,7 +91,7 @@ def real_data_loading (data_name, seq_len, acc_id=None):
   Returns:
     - data: preprocessed data.
   """
-  assert data_name in ['stock','energy', 'czb']
+  assert data_name in ['stock', 'energy', 'czb']
   
   if data_name == 'stock':
     ori_data = np.loadtxt(dirname(dirname(abspath(__file__))) + '/data/stock_data.csv', delimiter = ",",skiprows = 1)
@@ -117,24 +117,28 @@ def real_data_loading (data_name, seq_len, acc_id=None):
   data = []
   for i in range(len(temp_data)):
     data.append(temp_data[idx[i]])
-    
-  return data
+  if data_name == 'czb':
+    return data, labels
+  else:
+    return data
 
 
 def load_data(opt):
   ## Data loading
-  if opt.data_name in ['stock', 'energy', 'czb']:
-    ori_data = real_data_loading(opt.data_name, opt.seq_len)  # list: 3661; [24,6]
+  if opt.data_name in ['stock', 'energy']:
+    ori_data = real_data_loading(opt.data_name, opt.seq_len) # list: 3661; [24,6]
+    return ori_data
   elif opt.data_name == 'sine':
     # Set number of samples and its dimensions
     no, dim = 10000, 5
     ori_data = sine_data_generation(no, opt.seq_len, dim)
+    return ori_data
   elif opt.data_name == 'czb':
-    acc_id = "A0000009265"
-    ori_data, labels, scaler = real_data_loading(opt.data_name, opt.seq_len, acc_id)
+    ori_data, labels = real_data_loading(opt.data_name, opt.seq_len, opt.acc_id)
+    return ori_data, labels
   print(opt.data_name + ' dataset is ready.')
 
-  return ori_data
+
 
 
 def batch_generator(data, time, batch_size):

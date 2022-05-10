@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from dataprep import DataPrep
+from lib.dataprep import DataPrep
 
 CAT = ['type', 'operation', 'k_symbol', 'bank', 'account']
 LOG = ['amount']

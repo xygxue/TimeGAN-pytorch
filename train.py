@@ -39,13 +39,11 @@ from lib.timegan import TimeGAN
 def train(opt):
     """ Training
     """
-
-
     # LOAD DATA
-    ori_data = load_data(opt)
+    ori_data, labels = load_data(opt)
 
     # LOAD MODEL
-    model = TimeGAN(opt, ori_data)
+    model = TimeGAN(opt, ori_data, labels)
 
     # TRAIN MODEL
     model.train()
@@ -84,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--iteration',
         help='Training iterations (should be optimized)',
-        default=10000,
+        default=40000,
         type=int)
     parser.add_argument(
         '--batch_size',
@@ -104,8 +102,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--lr',
         help='learning rate',
-        default=1,
-        type=int)
+        default=0.001,
+        type=float)
     parser.add_argument(
         '--isTrain',
         help='if choosing training mode',
@@ -114,13 +112,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '--resume',
         help='if resume training',
-        default=False,
-        type=int)
+        default='',
+        type=str)
     parser.add_argument(
         '--beta1',
         help='coefficients used for computing running averages of gradient',
         default=0.9,
-        type=int)
+        type=float)
     parser.add_argument(
         '--w_g',
         help='weight of the moment loss among generator loss',
@@ -133,27 +131,30 @@ if __name__ == '__main__':
         type=int)
     parser.add_argument(
         '--device',
+        choices=['cpu', 'cuda'],
         help='device used for training',
         default='cpu',
-        type=int)
+        type=str)
     parser.add_argument(
         '--manualseed',
         help='random state',
-        default='42',
+        default=42,
         type=int)
     parser.add_argument(
         '--outf',
         help='output file path',
         default='data',
-        type=int)
+        type=str)
     parser.add_argument(
         '--name',
         help='output file path',
         default='czb',
-        type=int)
-
-
-
+        type=str)
+    parser.add_argument(
+        '--acc_id',
+        help='account id for czb dataset',
+        default='A0000009265',
+        type=str)
 
     args = parser.parse_args()
     train(args)
